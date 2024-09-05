@@ -6,11 +6,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 public class DatabaseManager {
 
     private static Connection connection;
@@ -28,14 +23,21 @@ public class DatabaseManager {
             }
 
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+
+            // Yabancı anahtarların aktif olduğundan emin olalım
+            Statement stmt = connection.createStatement();
+            stmt.execute("PRAGMA foreign_keys = ON;");
+
+            // Veritabanı bağlantısını başarıyla döndür
             return connection;
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Veritabanına bağlanırken hata oluştu: " + e.getMessage());
             e.printStackTrace();
-            return null;
+            return null; // Eğer hata olursa null döndür
         }
     }
+
 
     // Tabloları oluştur
     public static void createTables() {
@@ -48,6 +50,7 @@ public class DatabaseManager {
         String createIngredientTable = "CREATE TABLE IF NOT EXISTS ingredients (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT NOT NULL, " +
+                "price REAL NOT NULL, " + // Fiyat kolonu eklendi
                 "sub_ingredient_id INTEGER, " +
                 "FOREIGN KEY (sub_ingredient_id) REFERENCES ingredients(id)" +
                 ");";
@@ -64,8 +67,10 @@ public class DatabaseManager {
             stmt.execute(createProductTable);
             stmt.execute(createIngredientTable);
             stmt.execute(createProductIngredientRelationTable);
+            System.out.println("Tablolar başarıyla oluşturuldu veya zaten mevcut.");
         } catch (SQLException e) {
             System.out.println("Tablolar oluşturulurken hata oluştu: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
