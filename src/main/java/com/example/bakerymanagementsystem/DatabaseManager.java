@@ -50,7 +50,7 @@ public class DatabaseManager {
         String createIngredientTable = "CREATE TABLE IF NOT EXISTS ingredients (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT NOT NULL, " +
-                "price REAL NOT NULL, " + // Fiyat kolonu eklendi
+                "price REAL NOT NULL, " +
                 "sub_ingredient_id INTEGER, " +
                 "FOREIGN KEY (sub_ingredient_id) REFERENCES ingredients(id)" +
                 ");";
