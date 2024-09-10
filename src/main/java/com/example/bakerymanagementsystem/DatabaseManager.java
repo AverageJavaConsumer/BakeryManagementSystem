@@ -38,35 +38,27 @@ public class DatabaseManager {
         }
     }
 
-
     // Tabloları oluştur
     public static void createTables() {
-        String createProductTable = "CREATE TABLE IF NOT EXISTS products (" +
+        // items tablosu hem ürünleri hem maddeleri barındıracak
+        String createItemsTable = "CREATE TABLE IF NOT EXISTS items (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT NOT NULL, " +
                 "price REAL NOT NULL" +
                 ");";
 
-        String createIngredientTable = "CREATE TABLE IF NOT EXISTS ingredients (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "name TEXT NOT NULL, " +
-                "price REAL NOT NULL, " +
-                "sub_ingredient_id INTEGER, " +
-                "FOREIGN KEY (sub_ingredient_id) REFERENCES ingredients(id)" +
-                ");";
-
-        String createProductIngredientRelationTable = "CREATE TABLE IF NOT EXISTS product_ingredients (" +
-                "product_id INTEGER, " +
+        // item_ingredients tablosu, ürünlerin maddelerini ilişkilendirecek
+        String createItemIngredientRelationTable = "CREATE TABLE IF NOT EXISTS item_ingredients (" +
+                "item_id INTEGER, " +
                 "ingredient_id INTEGER, " +
-                "PRIMARY KEY (product_id, ingredient_id), " +
-                "FOREIGN KEY (product_id) REFERENCES products(id), " +
-                "FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)" +
+                "PRIMARY KEY (item_id, ingredient_id), " +
+                "FOREIGN KEY (item_id) REFERENCES items(id), " +
+                "FOREIGN KEY (ingredient_id) REFERENCES items(id)" +
                 ");";
 
         try (Connection conn = DatabaseManager.connect(); Statement stmt = conn.createStatement()) {
-            stmt.execute(createProductTable);
-            stmt.execute(createIngredientTable);
-            stmt.execute(createProductIngredientRelationTable);
+            stmt.execute(createItemsTable);
+            stmt.execute(createItemIngredientRelationTable);
             System.out.println("Tablolar başarıyla oluşturuldu veya zaten mevcut.");
         } catch (SQLException e) {
             System.out.println("Tablolar oluşturulurken hata oluştu: " + e.getMessage());

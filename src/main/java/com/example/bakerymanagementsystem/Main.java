@@ -1,23 +1,43 @@
 package com.example.bakerymanagementsystem;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import java.util.Scanner;
 
-public class Main {
+public class Main extends Application {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("layout.fxml"));
+        primaryStage.setTitle("Fırın Yönetim Sistemi");
+        primaryStage.setScene(new Scene(root, 600, 400));
+        primaryStage.show();
+    }
+
     public static void main(String[] args) {
+        Thread fxThread = new Thread(() -> launch(args));
+        fxThread.setDaemon(true);  // Ana thread durduğunda JavaFX thread'inin de durmasını sağlamak için daemon yapıyoruz
+        fxThread.start();
+
+        // Konsol tabanlı işlemler
         Scanner scanner = new Scanner(System.in);
         boolean keepRunning = true;
 
         // Veritabanına bağlan ve tabloları oluştur
         DatabaseManager.createTables();
 
-        // Program döngüsü
         while (keepRunning) {
+            // Menü güncelleniyor
             System.out.println("\n===== Fırın Yönetim Sistemi =====");
-            System.out.println("1 - Ürün Ekle");
-            System.out.println("2 - Ürünleri Görüntüle");
+            System.out.println("1 - Ürün veya Madde Ekle");
+            System.out.println("2 - Ürünleri ve Maddeleri Görüntüle");
             System.out.println("3 - Ürüne Madde Ekle");
             System.out.println("4 - Bir Ürünün Maddelerini Görüntüle");
-            System.out.println("5 - Bir Maddenin Alt Maddelerini Görüntüle");
+            System.out.println("5 - Ürün/Madde Fiyatını Güncelle");
             System.out.println("6 - Çıkış");
             System.out.print("Seçiminiz: ");
 
@@ -32,26 +52,26 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    // Ürün ekleme
-                    System.out.print("Ürün adını girin: ");
-                    String productName = scanner.nextLine();
-                    double productPrice;
+                    // Ürün veya madde ekleme
+                    System.out.print("Ürün veya madde adını girin: ");
+                    String itemName = scanner.nextLine();
+                    double itemPrice;
                     while (true) {
-                        System.out.print("Ürün fiyatını girin: ");
+                        System.out.print("Fiyatı girin: ");
                         String priceInput = scanner.nextLine();
                         try {
-                            productPrice = Double.parseDouble(priceInput);
+                            itemPrice = Double.parseDouble(priceInput);
                             break;
                         } catch (NumberFormatException e) {
                             System.out.println("Lütfen geçerli bir fiyat girin.");
                         }
                     }
-                    ProductService.addProduct(productName, productPrice);
+                    ItemService.addItem(itemName, itemPrice);
                     break;
 
                 case 2:
-                    // Ürünleri listeleme
-                    ProductService.listAllProducts();
+                    // Ürünleri ve maddeleri listeleme
+                    ItemService.listAllItems();
                     break;
 
                 case 3:
@@ -74,7 +94,7 @@ public class Main {
                         break;
                     }
 
-                    ProductService.addIngredientToProduct(productId, ingredientId);
+                    ItemService.addIngredientToItem(productId, ingredientId);
                     break;
 
                 case 4:
@@ -87,20 +107,30 @@ public class Main {
                         System.out.println("Geçersiz ürün ID'si.");
                         break;
                     }
-                    IngredientService.listIngredientsForProduct(listProductId);
+                    ItemService.listIngredientsForItem(listProductId);
                     break;
 
                 case 5:
-                    // Bir madde için alt maddeleri listeleme
-                    System.out.print("Lütfen madde ID'sini girin: ");
-                    int listIngredientId;
+                    // Ürün/Madde fiyatını güncelleme
+                    System.out.print("Fiyatını güncellemek istediğiniz ürün veya madde ID'sini girin: ");
+                    int updateItemId;
                     try {
-                        listIngredientId = Integer.parseInt(scanner.nextLine());
+                        updateItemId = Integer.parseInt(scanner.nextLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("Geçersiz madde ID'si.");
+                        System.out.println("Geçersiz ID.");
                         break;
                     }
-                    IngredientService.listSubIngredients(listIngredientId);
+
+                    System.out.print("Yeni fiyatı girin: ");
+                    double newPrice;
+                    try {
+                        newPrice = Double.parseDouble(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Geçersiz fiyat.");
+                        break;
+                    }
+
+                    ItemService.updateItemPrice(updateItemId, newPrice);
                     break;
 
                 case 6:

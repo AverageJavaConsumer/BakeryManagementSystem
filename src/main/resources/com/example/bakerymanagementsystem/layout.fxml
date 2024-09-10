@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bakerymanagementsystem.MainController">
+    <children>
+        <!-- Arama için TextField -->
+        <TextField fx:id="searchField" layoutX="50.0" layoutY="20.0" prefWidth="200.0" promptText="Ürün ara" onKeyReleased="#filterItems"/>
+
+        <!-- ListView tanımı -->
+        <ListView fx:id="itemListView" layoutX="50.0" layoutY="50.0" prefHeight="200.0" prefWidth="300.0" onMouseClicked="#handleItemClick"/>
+
+        <!-- Butonlar -->
+        <Button layoutX="50.0" layoutY="300.0" text="Ürün/Madde Ekle" onAction="#addItem"/>
+        <Button layoutX="180.0" layoutY="300.0" text="Ürüne Madde Ekle" onAction="#addIngredientToItem"/>
+        <Button layoutX="50.0" layoutY="350.0" text="Ürünü Sil" onAction="#deleteItem"/>
+        <Button layoutX="180.0" layoutY="350.0" text="Fiyatı Güncelle" onAction="#updateItemPrice"/>
+    </children>
+</AnchorPane>
