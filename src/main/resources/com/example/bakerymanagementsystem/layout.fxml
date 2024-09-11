@@ -1,22 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bakerymanagementsystem.MainController">
+<AnchorPane prefHeight="427.0" prefWidth="606.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="com.example.bakerymanagementsystem.MainController">
     <children>
         <!-- Arama için TextField -->
-        <TextField fx:id="searchField" layoutX="50.0" layoutY="20.0" prefWidth="200.0" promptText="Ürün ara" onKeyReleased="#filterItems"/>
+        <TextField fx:id="searchField" layoutX="20.0" layoutY="20.0" onKeyReleased="#filterItems" prefWidth="200.0" promptText="Ürün ara" />
 
-        <!-- ListView tanımı -->
-        <ListView fx:id="itemListView" layoutX="50.0" layoutY="50.0" prefHeight="200.0" prefWidth="300.0" onMouseClicked="#handleItemClick"/>
+        <!-- ListView tanımı (ürün/maddeler için) -->
+        <ListView fx:id="itemListView" layoutX="20.0" layoutY="50.0" onMouseClicked="#handleItemClick" prefHeight="250.0" prefWidth="180.0" />
+
+        <!-- TableView tanımı (malzemeler için) -->
+        <TableView fx:id="ingredientTableView" layoutX="318.0" layoutY="33.0" prefHeight="250.0" prefWidth="250.0">
+            <columns>
+                <TableColumn fx:id="ingredientNameColumn" prefWidth="125.0" text="Malzeme" />
+                <TableColumn fx:id="ingredientPriceColumn" prefWidth="125.0" text="Fiyat" />
+            </columns>
+        </TableView>
 
         <!-- Butonlar -->
-        <Button layoutX="50.0" layoutY="300.0" text="Ürün/Madde Ekle" onAction="#addItem"/>
-        <Button layoutX="180.0" layoutY="300.0" text="Ürüne Madde Ekle" onAction="#addIngredientToItem"/>
-        <Button layoutX="50.0" layoutY="350.0" text="Ürünü Sil" onAction="#deleteItem"/>
-        <Button layoutX="180.0" layoutY="350.0" text="Fiyatı Güncelle" onAction="#updateItemPrice"/>
+        <Button layoutX="20.0" layoutY="320.0" onAction="#addItem" text="Ürün/Madde Ekle" />
+        <Button layoutX="150.0" layoutY="320.0" onAction="#addIngredientToItem" text="Ürüne Madde Ekle" />
+        <Button layoutX="20.0" layoutY="370.0" onAction="#deleteItem" text="Ürünü Sil" />
+        <Button layoutX="150.0" layoutY="370.0" onAction="#updateItemPrice" text="Fiyatı Güncelle" />
+
+        <!-- Geri Dön Butonu -->
+        <Button fx:id="backButton" layoutX="318.0" layoutY="290.0" onAction="#handleBackButtonClick" text="Geri Dön" />
+
+        <!-- Toplam fiyat ve kg için Label ve Spinner -->
+        <Label fx:id="totalPriceLabel" layoutX="304.0" layoutY="324.0" text="Toplam Hammadde Fiyatı: 0,00" />
+        <Spinner fx:id="quantitySpinner" layoutX="483.0" layoutY="320.0" prefWidth="80.0" />
+        <Label fx:id="finalPriceLabel" layoutX="386.0" layoutY="361.0" text="Satış Fiyatı: 0,00" />
     </children>
 </AnchorPane>

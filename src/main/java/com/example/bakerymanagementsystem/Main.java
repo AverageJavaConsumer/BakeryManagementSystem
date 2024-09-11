@@ -20,14 +20,12 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         Thread fxThread = new Thread(() -> launch(args));
-        fxThread.setDaemon(true);  // Ana thread durduğunda JavaFX thread'inin de durmasını sağlamak için daemon yapıyoruz
+        fxThread.setDaemon(true);
         fxThread.start();
 
-        // Konsol tabanlı işlemler
         Scanner scanner = new Scanner(System.in);
         boolean keepRunning = true;
 
-        // Veritabanına bağlan ve tabloları oluştur
         DatabaseManager.createTables();
 
         while (keepRunning) {
